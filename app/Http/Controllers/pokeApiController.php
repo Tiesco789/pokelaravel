@@ -13,7 +13,7 @@ class pokeApiController extends Controller
         $url = '';
 
         if ($request->get('limit')) {
-           $params['limit'] = $request->get('limit');
+            $params['limit'] = $request->get('limit');
         }
 
         if ($request->get('offset')) {
