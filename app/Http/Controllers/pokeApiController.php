@@ -7,8 +7,8 @@ use Ixudra\Curl\Facades\Curl;
 
 class pokeApiController extends Controller
 {
-    public function apiNomes (Request $request)
-    {      
+    public function apiNomes(Request $request)
+    {
         $params = [];
         $url = '';
 
@@ -21,29 +21,29 @@ class pokeApiController extends Controller
         }
 
         $requestPokemon = Curl::to('https://pokeapi.co/api/v2/pokemon/')->withData($params)->asJson()->get();
-        
+
         $pokemons = $requestPokemon->results;
 
-        $pokeDex = [];      
+        $pokeDex = [];
 
         foreach ($pokemons as $pokemon) {
-            $typePoke   = [];
+            $typePoke = [];
             $spritePoke = [];
 
             $requestDetail = Curl::to($pokemon->url)->withData()->asJson()->get();
-            
+
             foreach ($requestDetail->types as $requestDetails) {
                 $typePoke[] = $requestDetails->type->name;
             }
 
             array_push($pokeDex, [
-                'nome'   => $requestDetail->name,
-                'peso'   => $requestDetail->weight,
+                'nome' => $requestDetail->name,
+                'peso' => $requestDetail->weight,
                 'altura' => $requestDetail->height,
                 'numero' => $requestDetail->id,
-                'tipos'  => $typePoke,
-                'img'    => $requestDetail->sprites->front_default
-                
+                'tipos' => $typePoke,
+                'img' => $requestDetail->sprites->front_default
+
             ]);
         }
 

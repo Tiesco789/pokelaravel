@@ -1,5 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use \App\Http\Livewire\PokeDexComponent as PokeDexComponent;
 
-Route::get('/', 'pokeApiController@apiNomes')->name('index');
+Route::get('/', PokeDexComponent::class)->name('index');
