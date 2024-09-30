@@ -1,6 +1,6 @@
 <div>
     @foreach ($pokeDex as $poke)
-        <div class="col">
+        <div>
             <div class="card" style="width: 20rem;">
                 <img class="card-img-top" src="{{ $poke['img'] }}" alt="Card image cap">
                 <ul class="list-group list-group-flush">

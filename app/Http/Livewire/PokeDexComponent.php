@@ -15,46 +15,46 @@ class PokeDexComponent extends Component
     // Método que será executado na inicialização do componente
     public function mount(Request $request)
     {
-        $params = [];
+        $this->limit = $request->get('limit', 15);
+        $this->offset = $request->get('offset', 0);
 
-        if ($request->get('limit')) {
-            $params['limit'] = $request->get('limit');
-            $this->limit = $request->get('limit');
-        }
+        $cacheKey = "pokemons_{$this->limit}_{$this->offset}";
 
-        if ($request->get('offset')) {
-            $params['offset'] = $request->get('offset');
-            $this->offset = $request->get('offset');
-        }
+        // Tente obter os dados do cache
+        $this->pokeDex = cache()->remember($cacheKey, 60 * 60, function () {
+            $params = [
+                'limit' => $this->limit,
+                'offset' => $this->offset,
+            ];
 
-        $requestPokemon = Curl::to('https://pokeapi.co/api/v2/pokemon/')
-            ->withData($params)
-            ->asJson()
-            ->get();
-
-        $pokemons = $requestPokemon->results;
-
-        foreach ($pokemons as $pokemon) {
-            $typePoke = [];
-
-            $requestDetail = Curl::to($pokemon->url)
-                ->withData()
+            $requestPokemon = Curl::to('https://pokeapi.co/api/v2/pokemon/')
+                ->withData($params)
                 ->asJson()
                 ->get();
 
-            foreach ($requestDetail->types as $requestDetails) {
-                $typePoke[] = $requestDetails->type->name;
+            $pokemons = $requestPokemon->results;
+
+            $pokeDex = [];
+            foreach ($pokemons as $pokemon) {
+                $typePoke = [];
+                $requestDetail = Curl::to($pokemon->url)->withData()->asJson()->get();
+
+                foreach ($requestDetail->types as $requestDetails) {
+                    $typePoke[] = $requestDetails->type->name;
+                }
+
+                $pokeDex[] = [
+                    'nome' => $requestDetail->name,
+                    'peso' => $requestDetail->weight,
+                    'altura' => $requestDetail->height,
+                    'numero' => $requestDetail->id,
+                    'tipos' => $typePoke,
+                    'img' => $requestDetail->sprites->front_default,
+                ];
             }
 
-            array_push($this->pokeDex, [
-                'nome' => $requestDetail->name,
-                'peso' => $requestDetail->weight,
-                'altura' => $requestDetail->height,
-                'numero' => $requestDetail->id,
-                'tipos' => $typePoke,
-                'img' => $requestDetail->sprites->front_default,
-            ]);
-        }
+            return $pokeDex;
+        });
     }
 
     public function render()
