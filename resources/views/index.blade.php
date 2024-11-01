@@ -1,8 +1,15 @@
 @extends('components.layouts.app')
 
 @section('content')
-    <h1>Bem-vindo à PokeDex</h1>
-    <livewire:poke-dex-component />
+    <div class="d-flex flex-column">
+        <input type="text" placeholder="Buscar pokemon">
+        <button>Pesquisar</button>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <livewire:poke-dex-component />
+    </div>
+
 
     <form>
         <div class="d-flex justify-content-between mt-3 mb-1">

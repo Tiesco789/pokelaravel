@@ -12,21 +12,14 @@
     <!-- Bootstrap core CSS -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
-    @livewireStyles
 </head>
 
-<body>
-    <header>
-        <div class="navbar" style="background-color: #691313;">
-            <div>
-                <a class="navbar-brand d-flex">
-                    <strong class="text-white">Pokedex</strong>
-                </a>
-            </div>
-        </div>
+<body class="border-red-500">
+    <header class="p-8">
+        <h1 class="p-8">Bem-vindo à PokeDex</h1>
     </header>
 
-    <main>
+    <main class="container">
         @yield('content') <!-- Aqui é onde o conteúdo das views que estendem este layout será inserido -->
     </main>
 
